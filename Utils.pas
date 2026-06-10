@@ -1,15 +1,14 @@
 ﻿unit Utils;
 
-
 interface
 
-// Читает целое число. Если ввод не является числом — Ok = False
+// чтение целого числа и установка флага успешности
 procedure ReadInt(const Prompt: string; var Result: Integer; var Ok: Boolean);
 
-// Проверка на ввод вещественного числа
+// чтение вещественного числа и установка флага успешности
 procedure ReadReal(const Prompt: string; var Result: Real; var Ok: Boolean);
 
-// Проверка на ввод строки
+// чтение строки и проверка на непустоту
 procedure ReadStr(const Prompt: string; var Result: string; var Ok: Boolean);
 
 implementation
@@ -50,4 +49,3 @@ begin
 end;
 
 end.
-

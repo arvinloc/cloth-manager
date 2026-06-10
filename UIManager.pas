@@ -1,10 +1,8 @@
 ﻿unit UIManager;
 
-
-
 interface
 
-// Запуск цикла программы
+// запуск цикла программы
 procedure RunMainLoop;
 
 implementation
@@ -17,9 +15,7 @@ uses
   ClothTypeRepo,
   ClothRepo;
 
-
-
- // Выводит одну строку таблицы типов одежды
+// вывод одной строки таблицы типов одежды
 procedure PrintTypeRow(const Rec: TClothType);
 begin
 
@@ -30,7 +26,7 @@ begin
   );
 end;
 
-// Выводит шапку таблицы типов одежды
+// вывод шапки таблицы типов одежды
 procedure PrintTypeHeader;
 begin
 
@@ -47,7 +43,7 @@ begin
   );
 end;
 
-// Выводит одну строку таблицы товаров
+// вывод одной строки таблицы товаров
 procedure PrintClothRow(const Rec: TCloth);
 begin
   Writeln(
@@ -62,7 +58,7 @@ begin
   );
 end;
 
-// Вывод шапки таблицы товаров
+// вывод шапки таблицы товаров
 procedure PrintClothHeader;
 begin
   Writeln(
@@ -86,7 +82,6 @@ begin
     '------':6
   );
 end;
-
 
 procedure ShowAllTypes;
 var
@@ -123,8 +118,6 @@ begin
     n := n^.Next;
   end;
 end;
-
-
 
 procedure UIAddClothType;
 var
@@ -231,8 +224,6 @@ begin
   if ErrMsg = '' then Writeln('Тип одежды обновлён.')
   else Writeln('Ошибка: ', ErrMsg);
 end;
-
-
 
 procedure UIAddCloth;
 var
@@ -389,7 +380,6 @@ begin
   else Writeln('Ошибка: ', ErrMsg);
 end;
 
-
 procedure UISearchCloth;
 var
   sub         : Integer;
@@ -433,7 +423,7 @@ begin
          case num of
            1: s := 'Мужской'; 2: s := 'Женский'; 3: s := 'Детский';
          end;
-         sub := 5; // Поиск по строковому полю Gender
+         sub := 5;
        end;
   end;
 
@@ -528,7 +518,7 @@ begin
   end;
 end;
 
-// ---- Сортировка ----
+// ---- сортировка ----
 
 procedure UISortCloth;
 var
@@ -603,7 +593,7 @@ begin
   end;
 end;
 
-// ---- Меню подбора и покупки ----
+// ---- меню подбора и покупки ----
 
 procedure UISelectGoods;
 var
@@ -696,7 +686,7 @@ begin
   ReadInt('Введите желаемое количество для покупки: ', qty, ok);
   if not ok then Exit;
 
-  // Проверяем наличие товара перед подтверждением
+  // проверка наличия товара перед подтверждением
   n := FindClothByCode(code);
   if n = nil then
   begin
@@ -723,7 +713,7 @@ begin
     Exit;
   end;
 
-  // Запись чека в файл
+  // запись чека в файл
   fname := 'receipt' + FormatDateTime('ddmmyyyy_hhnnss', Now) + '.txt';
   AssignFile(tf, fname);
   Rewrite(tf);
@@ -748,8 +738,7 @@ begin
   Writeln('Чек сохранён в ', fname);
 end;
 
-
-// Меню программы
+// меню программы
 procedure ShowMenu;
 begin
   Writeln;
@@ -785,7 +774,7 @@ begin
   Write('Выбор: ');
 end;
 
-// Основной цикл интерфейса
+// основной цикл интерфейса
 
 procedure RunMainLoop;
 var

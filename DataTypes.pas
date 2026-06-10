@@ -1,64 +1,53 @@
 ﻿unit DataTypes;
 
-
-
 interface
 
-
-
 type
- // Запись типа одежды
+  // запись типа одежды
   TClothType = record
-    Code   : Integer;      { Уникальный числовой код типа }
-    Name   : string[50];   { Название типа одежды }
-    Season : string[20];   { Сезон: Зима / Весна / Лето / Осень }
+    Code   : Integer;      { уникальный числовой код типа }
+    Name   : string[50];   { наименование типа одежды }
+    Season : string[20];   { сезон зима весна лето осень }
   end;
 
-  // Запись товара
+  // запись товара
   TCloth = record
-    Code     : Integer;    { Уникальный числовой код товара }
-    TypeCode : Integer;    { Код типа одежды (внешний ключ -> TClothType) }
-    Brand    : string[50]; { Бренд и модель }
-    Size     : string[10]; { Размер (например: M, L, 42, 44-66 и т.д.) }
-    Color    : string[20]; { Цвет }
-    Price    : Real;       { Цена в рублях }
-    Gender   : string[10]; { Пол: Мужской / Женский / Детский }
-    Count    : Integer;    { Количество единиц на складе }
+    Code     : Integer;    // уникальный числовой код товара
+    TypeCode : Integer;    // код типа одежды внешний ключ на TClothType
+    Brand    : string[50]; // бренд и модель
+    Size     : string[10]; // размер m/l/42/44-66/ итд
+    Color    : string[20]; // цвет
+    Price    : Real;       // цена в рублях
+    Gender   : string[10]; // пол мужской женский детский
+    Count    : Integer;    // количество единиц на складе
   end;
 
-// Типизированные файлы
+// типизированные файлы
 
 type
-  TTypeFile  = file of TClothType; { Бинарный файл типов одежды }
-  TClothFile = file of TCloth;     { Бинарный файл товаров }
+  TTypeFile  = file of TClothType; // типизированный файл типов одежды
+  TClothFile = file of TCloth;     // типизированный файл товаров
 
-// Узлы односвязных списков
+// узлы односвязных списков
 
 type
   PTypeNode = ^TTypeNode;
   TTypeNode = record
-    Data : TClothType; { Данные узла — тип одежды }
-    Next : PTypeNode;  { Указатель на следующий узел }
+    Data : TClothType; // данные узла тип одежды
+    Next : PTypeNode;  // указатель на следующий узел
   end;
 
   PClothNode = ^TClothNode;
   TClothNode = record
-    Data : TCloth;     { Данные узла — товар }
-    Next : PClothNode; { Указатель на следующий узел }
+    Data : TCloth;     // данные узла товар
+    Next : PClothNode; // указатель на следующий узел
   end;
 
-// Головы списков
-
+// головы списков
 var
-
   TypeHead  : PTypeNode;
-
-
   ClothHead : PClothNode;
 
 implementation
 
-
-
 end.
-

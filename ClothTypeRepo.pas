@@ -1,39 +1,36 @@
 ﻿unit ClothTypeRepo;
 
-
-
 interface
 
 uses DataTypes;
 
-// Устанавливает поле Season по числовому коду сезона (1..5).
+// устанавливает поле season по числовому коду сезона от 1 до 5
 procedure SetSeason(Code: Integer; var ClothType: TClothType);
 
-// Линейный поиск типа одежды по коду. Возвращает указатель или nil
+// выполняет линейный поиск типа одежды по коду
+// возвращает указатель или nil
 function FindTypeByCode(Code: Integer): PTypeNode;
 
-// Добавляет новый тип в конец списка.
+// добавляет новый тип в конец списка
 procedure AddClothType(const Rec: TClothType; var ErrMsg: string);
 
-// Удаляет тип по коду.
-// ErrMsg = '' при успехе.
+// удаляет тип по коду
+// очищает ErrMsg при успешном выполнении процедуры
 procedure DeleteClothType(Code: Integer; var ErrMsg: string);
 
-// Обновление полей по коду.
+// обновляет поля по коду
 procedure UpdateClothType(const Rec: TClothType; var ErrMsg: string);
 
-// Сортировка списка типов одежды по заданному полю:
-// Field=1 - по коду, Field=2 - по названию, Field=3 - по сезону.
-// Возвращает False, если список пуст.
+// сортирует список типов одежды по заданному полю
+// сортирует по коду если field 1 по названию если field 2 по сезону если field 3
+// возвращает false если список пуст
 function SortTypeBy(Field: Integer): Boolean;
 
 implementation
 
-
-
 procedure SetSeason(Code: Integer; var ClothType: TClothType);
 begin
-  // Преобразуем числовой код в строку сезона
+  // преобразует числовой код в строку сезона
   case Code of
     1: ClothType.Season := 'Зима';
     2: ClothType.Season := 'Весна';
@@ -43,20 +40,16 @@ begin
   end;
 end;
 
-
-
 function FindTypeByCode(Code: Integer): PTypeNode;
 var
   n: PTypeNode;
 begin
   n := TypeHead;
-  // Идём по списку до совпадения кода или до конца
+  // проходит по списку до совпадения кода или до конца
   while (n <> nil) and (n^.Data.Code <> Code) do
     n := n^.Next;
   FindTypeByCode := n;
 end;
-
-
 
 procedure AddClothType(const Rec: TClothType; var ErrMsg: string);
 var
@@ -65,14 +58,14 @@ var
 begin
   ErrMsg := '';
 
- // Проверяем уникальность кода
+  // проверяет уникальность кода
   if FindTypeByCode(Rec.Code) <> nil then
   begin
     ErrMsg := 'Запись с таким кодом уже существует.';
     Exit;
   end;
 
-  // Создаём узел и добавляем в конец списка
+  // создает узел и добавляет в конец списка
   New(n);
   n^.Data := Rec;
   n^.Next := nil;
@@ -86,8 +79,6 @@ begin
     last^.Next := n;
   end;
 end;
-
-
 
 procedure DeleteClothType(Code: Integer; var ErrMsg: string);
 var
@@ -103,7 +94,7 @@ begin
     Exit;
   end;
 
- // Ищем предыдущий узел для перешивки указателей
+  // ищет предыдущий узел для замены указателей
   prev := nil;
   if TypeHead <> n then
   begin
@@ -111,13 +102,11 @@ begin
     while prev^.Next <> n do prev := prev^.Next;
   end;
 
-  // Отцепляем узел и освобождаем память
+  // отцепляет узел и освобождает память
   if prev = nil then TypeHead := n^.Next
   else prev^.Next := n^.Next;
   Dispose(n);
 end;
-
-
 
 procedure UpdateClothType(const Rec: TClothType; var ErrMsg: string);
 var
@@ -132,12 +121,10 @@ begin
     Exit;
   end;
 
-  //  Перезаписываем поля — код не меняем, только данные
+  // перезаписывает поля только данные без кода
   n^.Data.Name   := Rec.Name;
   n^.Data.Season := Rec.Season;
 end;
-
-
 
 function SortTypeBy(Field: Integer): Boolean;
 var
@@ -152,7 +139,7 @@ begin
     Exit;
   end;
 
-  // Пузырёк: повторяем проходы до полного отсутствия перестановок
+  // повторяет проходы методом пузырька до полного отсутствия перестановок
   repeat
     sorted := True;
     i := TypeHead;

@@ -1,21 +1,18 @@
 ﻿unit FileStorage;
 
-
 interface
 
 uses DataTypes;
 
-
+// загрузка данных из файлов
 procedure LoadFromFiles;
 
-
+// сохранение данных в файлы
 procedure SaveToFiles;
 
 implementation
 
 uses SysUtils;
-
-// Загрузка
 
 procedure LoadFromFiles;
 var
@@ -28,7 +25,7 @@ var
   tlast : PTypeNode;
   clast : PClothNode;
 begin
-  // Чтение типизированного файла товаров так чтобы не было утечки памяти за счет очистки старых эл-тов.
+  // очистка старых элементов списка для предотвращения утечки памяти
   while TypeHead <> nil do
   begin
     tn := TypeHead;
@@ -36,7 +33,7 @@ begin
     Dispose(tn);
   end;
 
-  { Освобождаем старый список товаров }
+  // освобождение старого списка товаров
   while ClothHead <> nil do
   begin
     cn := ClothHead;
@@ -44,7 +41,7 @@ begin
     Dispose(cn);
   end;
 
-// Чтение типизированного файла типов
+  // чтение типизированного файла типов
   if FileExists('types.dat') then
   begin
     AssignFile(tf, 'types.dat');
@@ -52,11 +49,11 @@ begin
     tlast := nil;
     while not Eof(tf) do
     begin
-      Read(tf, tr);        // Чтение одной записи
-      New(tn);             // Аллокация памяти для нового узла
+      Read(tf, tr);
+      New(tn);
       tn^.Data := tr;
       tn^.Next := nil;
-      // Добавление в конец вписка
+      // добавление в конец списка
       if TypeHead = nil then TypeHead := tn
       else
         tlast^.Next := tn;
@@ -68,7 +65,7 @@ begin
   else
     Writeln('Файл types.dat не найден, список пуст.');
 
-  //  Чтение товаров из типизированного файла
+  // чтение товаров из типизированного файла
   if FileExists('cloth.dat') then
   begin
     AssignFile(cf, 'cloth.dat');
@@ -91,8 +88,6 @@ begin
     Writeln('Файл cloth.dat не найден, список пуст.');
 end;
 
-// Сохранение
-
 procedure SaveToFiles;
 var
   tf : TTypeFile;
@@ -100,7 +95,7 @@ var
   tn : PTypeNode;
   cn : PClothNode;
 begin
-  // Перезапись файла типов
+  // перезапись файла типов
   AssignFile(tf, 'types.dat');
   Rewrite(tf);
   tn := TypeHead;
@@ -111,7 +106,7 @@ begin
   end;
   CloseFile(tf);
 
-   // Перезапись файла товаров
+  // перезапись файла товаров
   AssignFile(cf, 'cloth.dat');
   Rewrite(cf);
   cn := ClothHead;
@@ -126,4 +121,3 @@ begin
 end;
 
 end.
-

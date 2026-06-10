@@ -3,9 +3,10 @@
 *.bpl
 *.dcp
 *.dcu
-
+*.res
 
 *.dproj.local
+*.droj
 *.identcache
 *.tvsconfig
 __history/

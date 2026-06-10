@@ -1,38 +1,37 @@
 ﻿unit ClothRepo;
 
-
 interface
 
 uses DataTypes;
 
-// Устанавливает половозростной признак в соответствии с кодом, который ввел пользователь
+// установка половозрастного признака в соответствии с кодом который ввел пользователь
 procedure SetGender(Code: Integer; var Cloth: TCloth);
 
-// Линейный поиск товара по коду
+// линейный поиск товара по коду
 function FindClothByCode(Code: Integer): PClothNode;
 
-// Добавляет товар
+// добавление товара
 procedure AddCloth(const Rec: TCloth; var ErrMsg: string);
 
-// Удаляет по коду
+// удаление по коду
 procedure DeleteCloth(Code: Integer; var ErrMsg: string);
 
-// Обновляет поля товара по коду
+// обновление полей товара по коду
 procedure UpdateCloth(const Rec: TCloth; var ErrMsg: string);
 
-// Сортировка списка товаров по заданному полю:
-// Field=1 - по коду товара, Field=2 - по коду типа, Field=3 - по бренду/модели.
-// Возвращает False если список пуст.
+// сортировка списка товаров по заданному полю
+// field 1 по коду товара field 2 по коду типа field 3 по бренду модели
+// возврат false если список пуст
 function SortClothBy(Field: Integer): Boolean;
 
-// Подбор товаров по сезону, полу и размеру, результат отсортирован по цене
+// подбор товаров по сезону полу и размеру результат отсортирован по цене
 procedure SelectGoods(
   const Season, Gender, Size : string;
   var ResultCodes             : array of Integer;
   var ResultCount             : Integer
 );
 
-// Оформление покупки
+// оформление покупки
 procedure BuyGoods(
   Code          : Integer;
   Qty           : Integer;
@@ -40,10 +39,10 @@ procedure BuyGoods(
   var ErrMsg    : string
 );
 
-// Поиск товаров по заданному полю:
-// Field=1 - код товара (NumVal), Field=2 - код типа (NumVal),
-// Field=3 - бренд (StrVal), Field=4 - размер (StrVal),
-// Field=5 - половозрастной признак (StrVal)
+// поиск товаров по заданному полю
+// field 1 код товара numval field 2 код типа numval
+// field 3 бренд strval field 4 размер strval
+// field 5 половозрастной признак strval
 procedure SearchCloth(
   Field        : Integer;
   NumVal       : Integer;
@@ -56,8 +55,6 @@ implementation
 
 uses SysUtils, ClothTypeRepo;
 
-
-
 procedure SetGender(Code: Integer; var Cloth: TCloth);
 begin
   case Code of
@@ -67,20 +64,16 @@ begin
   end;
 end;
 
-
-
 function FindClothByCode(Code: Integer): PClothNode;
 var
   n: PClothNode;
 begin
   n := ClothHead;
-  // Линейный обход до первого совпадения
+  // линейный обход до первого совпадения
   while (n <> nil) and (n^.Data.Code <> Code) do
     n := n^.Next;
   FindClothByCode := n;
 end;
-
-
 
 procedure AddCloth(const Rec: TCloth; var ErrMsg: string);
 var
@@ -89,21 +82,21 @@ var
 begin
   ErrMsg := '';
 
-  // Проверяем уникальность кода самого товара
+  // проверка уникальности кода самого товара
   if FindClothByCode(Rec.Code) <> nil then
   begin
     ErrMsg := 'Запись с таким кодом уже существует.';
     Exit;
   end;
 
-  // Проверяем существует ли тип одежды с указанным кодом
+  // проверка существования типа одежды с указанным кодом
   if FindTypeByCode(Rec.TypeCode) = nil then
   begin
     ErrMsg := 'Тип одежды с кодом ' + IntToStr(Rec.TypeCode) + ' не найден.';
     Exit;
   end;
 
-  // Создаём узел и добавляем в конец списка
+  // создание узла и добавление в конец списка
   New(n);
   n^.Data := Rec;
   n^.Next := nil;
@@ -117,8 +110,6 @@ begin
     last^.Next := n;
   end;
 end;
-
-
 
 procedure DeleteCloth(Code: Integer; var ErrMsg: string);
 var
@@ -146,8 +137,6 @@ begin
   Dispose(n);
 end;
 
-
-
 procedure UpdateCloth(const Rec: TCloth; var ErrMsg: string);
 var
   n: PClothNode;
@@ -161,7 +150,7 @@ begin
     Exit;
   end;
 
-  // Перезаписываем все поля кроме кода
+  // перезапись всех полей кроме кода
   n^.Data.TypeCode := Rec.TypeCode;
   n^.Data.Brand    := Rec.Brand;
   n^.Data.Size     := Rec.Size;
@@ -170,8 +159,6 @@ begin
   n^.Data.Gender   := Rec.Gender;
   n^.Data.Count    := Rec.Count;
 end;
-
-
 
 function SortClothBy(Field: Integer): Boolean;
 var
@@ -186,7 +173,7 @@ begin
     Exit;
   end;
 
-  // Пузырёк: повторяем проходы до полного отсутствия перестановок
+  // повторение проходов методом пузырька до полного отсутствия перестановок
   repeat
     sorted := True;
     i := ClothHead;
@@ -202,7 +189,7 @@ begin
 
       if less then
       begin
-        // Меняем содержимое узлов местами
+        // обмен содержимого узлов местами
         tmp           := i^.Data;
         i^.Data       := i^.Next^.Data;
         i^.Next^.Data := tmp;
@@ -214,7 +201,6 @@ begin
 
   SortClothBy := True;
 end;
-
 
 procedure SelectGoods(
   const Season, Gender, Size : string;
@@ -233,14 +219,14 @@ begin
   ResultCount := 0;
   n := ClothHead;
 
-  // Собираем товары, соответствующие всем трём фильтрам
+  // сбор товаров соответствующих всем трем фильтрам
   while (n <> nil) and (ResultCount < 200) do
   begin
     if (n^.Data.Gender = Gender) and
        (n^.Data.Size   = Size)   and
        (n^.Data.Count  > 0)      then
     begin
-      // Определяем сезон через связанный тип одежды
+      // определение сезона через связанный тип одежды
       typeSeason := '';
       tn := FindTypeByCode(n^.Data.TypeCode);
       if tn <> nil then typeSeason := tn^.Data.Season;
@@ -255,7 +241,7 @@ begin
     n := n^.Next;
   end;
 
-  // Сортируем результат по цене (пузырёк по массиву)
+  // сортировка результата по цене пузырьком по массиву
   for i := 0 to ResultCount - 2 do
     for j := 0 to ResultCount - 2 - i do
       if prices[j] > prices[j + 1] then
@@ -264,8 +250,6 @@ begin
         tmpI := ResultCodes[j]; ResultCodes[j] := ResultCodes[j + 1]; ResultCodes[j + 1] := tmpI;
       end;
 end;
-
-
 
 procedure BuyGoods(
   Code          : Integer;
@@ -291,19 +275,17 @@ begin
     Exit;
   end;
 
-  // Проверяем достаточность остатка
+  // проверка достаточности остатка
   if n^.Data.Count < Qty then
   begin
     ErrMsg := 'Недостаточно на складе. В наличии: ' + IntToStr(n^.Data.Count) + '.';
     Exit;
   end;
 
-  // Уменьшаем остаток и возвращаем новое значение
+  // уменьшение остатка и возврат нового значения
   n^.Data.Count := n^.Data.Count - Qty;
   Remaining     := n^.Data.Count;
 end;
-
-
 
 procedure SearchCloth(
   Field        : Integer;
@@ -321,7 +303,7 @@ begin
 
   while (n <> nil) and (ResultCount < 200) do
   begin
-    // Определяем совпадение по выбранному полю
+    // определение совпадения по выбранному полю
     case Field of
       1: match := n^.Data.Code     = NumVal;
       2: match := n^.Data.TypeCode = NumVal;
