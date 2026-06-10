@@ -22,7 +22,6 @@ procedure DeleteClothType(Code: Integer; var ErrMsg: string);
 procedure UpdateClothType(const Rec: TClothType; var ErrMsg: string);
 
 // сортирует список типов одежды по заданному полю
-// сортирует по коду если field 1 по названию если field 2 по сезону если field 3
 // возвращает false если список пуст
 function SortTypeBy(Field: Integer): Boolean;
 

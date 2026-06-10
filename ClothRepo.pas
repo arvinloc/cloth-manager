@@ -40,9 +40,6 @@ procedure BuyGoods(
 );
 
 // поиск товаров по заданному полю
-// field 1 код товара numval field 2 код типа numval
-// field 3 бренд strval field 4 размер strval
-// field 5 половозрастной признак strval
 procedure SearchCloth(
   Field        : Integer;
   NumVal       : Integer;

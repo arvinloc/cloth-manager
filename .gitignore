@@ -6,7 +6,7 @@
 *.res
 
 *.dproj.local
-*.droj
+*.dproj
 *.identcache
 *.tvsconfig
 __history/
